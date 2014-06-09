@@ -15,15 +15,14 @@ if(!file.exists("./data")){
 # Get the file containing the column names for the variables
 features <- read.table("data/UCI HAR Dataset/features.txt")
 str(features) # 561 obs. of  2 variables
+cnames <- c("Subject", "Activity", as.character(features[,2]))
+str(cnames)
+
 
 # Test Data
 test.set <- read.table("data/UCI HAR Dataset/test/X_test.txt")    # 2947 obs. of 561 variables
 test.labels <- read.table("data/UCI HAR Dataset/test/y_test.txt") # 2947 obs. of 1 variable
 test.subjects <- read.table("data/UCI HAR Dataset/test/subject_test.txt") #2947 obs. of  1 variable
-
-# Name the columns
-names(test.set) <- features[,2]
-names(test.set)
 
 str(test.set) # 2947 obs. of  561 variables
 head(test.set, n=5)[,1:5]
@@ -36,19 +35,20 @@ str(test.subjects) # 2947 obs. of  1 variable
 head(test.subjects)
 table(test.subjects, useNA="ifany") # 2,4,9,10,12,13,18,20,24 (of the 30 volunteers)
 
-test.set$Subject <- test.subjects
-test.set$Activity <- test.labels
+# Add new columns to the data
+test.set <- cbind(test.subjects, test.labels, test.set)
 
-test.set[, c("Subject", "Activity")]
+# Name the columns
+colnames(test.set) <- cnames
+colnames(test.set)
+
+head(test.set, n=5)[,1:5]
+
 
 # Train Data
-
 train.set <- read.table("data/UCI HAR Dataset/train/X_train.txt")
 train.labels <- read.table("data/UCI HAR Dataset/train/y_train.txt")
 train.subjects <- read.table("data/UCI HAR Dataset/train/subject_train.txt")
-
-# Name the columns
-names(train.set) <- features[,2]
 
 str(train.set) # 7352 obs. of  561 variables
 head(train.set)[,1:5]
@@ -61,12 +61,21 @@ str(train.subjects) # 7352 obs. of  1 variable
 head(train.subjects)
 table(train.subjects, useNA="ifany") # 1-30 (Volunteers)
 
-train.set$Subject <- train.subjects
-train.set$Activity <- train.labels
+# Add new columns to the data
+train.set <- cbind(train.subjects, train.labels, train.set)
 
-train.set[, c("Subject", "Activity")]
+# Name the columns
+names(train.set) <- cnames
 
+head(train.set)[,1:5]
+
+
+# Combine the datasets
 data.set <- rbind(test.set, train.set)
+
+head(data.set, n=50)[,1:5]
+table(data.set$Subject, useNA="ifany")
+
 
 
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
