@@ -81,6 +81,26 @@ table(data.set$Subject, useNA="ifany")
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
 ##################################################################
 
+# From features_info.txt:
+# "The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ."
+# and
+# "the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ)"
+# Accelerometer (tBodyAcc-XYZ) and the gyroscope (tBodyGyro-XYZ)
+
+# If each measurement in the dataset is a row, 
+# I should extract the mean and standard deviation of the variables as such.
+
+mean.sd.meas <- c("tBodyAcc-mean()-X",    "tBodyAcc-mean()-Y",    "tBodyAcc-mean()-Z", 
+                  "tBodyAcc-std()-X",     "tBodyAcc-std()-Y",     "tBodyAcc-std()-Z",
+                  "tGravityAcc-mean()-X", "tGravityAcc-mean()-Y", "tGravityAcc-mean()-Z",
+                  "tGravityAcc-std()-X",  "tGravityAcc-std()-Y",  "tGravityAcc-std()-Z",
+                  "tBodyGyro-mean()-X",   "tBodyGyro-mean()-Y",   "tBodyGyro-mean()-Z",
+                  "tBodyGyro-std()-X",    "tBodyGyro-std()-Y",    "tBodyGyro-std()-Z")
+
+data.ext <- data.set[, c("Subject", "Activity", mean.sd.meas)]
+
+str(data.ext)
+head(data.ext, n=10)[,1:6]
 
 # 3. Uses descriptive activity names to name the activities in the data set
 ##################################################################
