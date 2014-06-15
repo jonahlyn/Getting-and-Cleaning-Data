@@ -105,6 +105,18 @@ head(data.ext, n=10)[,1:6]
 # 3. Uses descriptive activity names to name the activities in the data set
 ##################################################################
 
+library("plyr")
+
+# read in the activity labels
+activity.labels <- read.table("data/UCI HAR Dataset/activity_labels.txt")
+colnames(activity.labels) <- c("Activity", "ActivityLabel")
+
+# join the activity labels into the data set
+data.act <- join(data.ext, activity.labels, by = 'Activity')
+data.act <- data.act[,!(colnames(data.act) %in% c("Activity"))]
+
+# reorder the columns
+data.act <- data.act[c(1,20,2:19)]
 
 # 4. Appropriately labels the data set with descriptive variable names.
 ##################################################################
