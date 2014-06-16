@@ -81,42 +81,34 @@ table(data.set$Subject, useNA="ifany")
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
 ##################################################################
 
-# From features_info.txt:
-# "The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ."
-# and
-# "the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ)"
-# Accelerometer (tBodyAcc-XYZ) and the gyroscope (tBodyGyro-XYZ)
+# This extracts the mean and standard deviation for each signal listed in features_info.txt.
+# 8 variables with XYZ 3-axial signals (8 * 3 * 2 = 48) 
+# and 9 magnitudes of these variables (9 * 2 = 18)
+# for a total of 66 features extracted.
 
-# If each measurement in the dataset is a row, 
-# I should extract the mean and standard deviation of the variables as such.
+mean.meas <- grep("(mean|std)\\(\\)", colnames(data.set), value = TRUE)
 
-mean.sd.meas <- c("tBodyAcc-mean()-X",    "tBodyAcc-mean()-Y",    "tBodyAcc-mean()-Z", 
-                  "tBodyAcc-std()-X",     "tBodyAcc-std()-Y",     "tBodyAcc-std()-Z",
-                  "tGravityAcc-mean()-X", "tGravityAcc-mean()-Y", "tGravityAcc-mean()-Z",
-                  "tGravityAcc-std()-X",  "tGravityAcc-std()-Y",  "tGravityAcc-std()-Z",
-                  "tBodyGyro-mean()-X",   "tBodyGyro-mean()-Y",   "tBodyGyro-mean()-Z",
-                  "tBodyGyro-std()-X",    "tBodyGyro-std()-Y",    "tBodyGyro-std()-Z")
-
-data.ext <- data.set[, c("Subject", "Activity", mean.sd.meas)]
+data.ext <- data.set[, c("Subject", "Activity", mean.meas)]
 
 str(data.ext)
-head(data.ext, n=10)[,1:6]
 
 # 3. Uses descriptive activity names to name the activities in the data set
 ##################################################################
 
 library("plyr")
 
-# read in the activity labels
+# Read in the activity labels
 activity.labels <- read.table("data/UCI HAR Dataset/activity_labels.txt")
 colnames(activity.labels) <- c("Activity", "ActivityLabel")
 
-# join the activity labels into the data set
+# Join the activity labels into the data set
 data.act <- join(data.ext, activity.labels, by = 'Activity')
-data.act <- data.act[,!(colnames(data.act) %in% c("Activity"))]
 
-# reorder the columns
-data.act <- data.act[c(1,20,2:19)]
+# Reorder the columns so that the activity label is the second column.
+data.act <- data.act[c(1,69,2:68)]
+
+# Remove the original "Activity" column
+data.act <- data.act[,!(colnames(data.act) %in% c("Activity"))]
 
 # 4. Appropriately labels the data set with descriptive variable names.
 ##################################################################
