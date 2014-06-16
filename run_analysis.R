@@ -121,6 +121,8 @@ data.act <- data.act[c(1,20,2:19)]
 # 4. Appropriately labels the data set with descriptive variable names.
 ##################################################################
 
+colnames(data.act) <- gsub("\\(\\)", "", tolower(colnames(data.act)))
+
 
 # 5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 ##################################################################
