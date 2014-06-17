@@ -116,12 +116,20 @@ data.act <- data.act[,!(colnames(data.act) %in% c("Activity"))]
 colnames(data.act) <- gsub("\\(\\)", "", tolower(colnames(data.act)))
 
 
-# 5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+# 5. Creates a second, independent tidy data set with 
+# the average of each variable for each activity and each subject.
 ##################################################################
 
+library(reshape2)
 
+# Collect the column names for future use
+colids <- colnames(data.act)[1:2]
+colvars <- colnames(data.act)[3:length(colnames(data.act))]
 
+# Reshape the data and take the mean of each variable by subject and activity
+data.melt <- melt(data.act, id=colids, measure.vars=colvars)
+data.cast <- dcast(data.melt, subject + activitylabel ~ variable, mean)
 
-
-
+# Add 'avg' to the variable name to differentiate the data in the new data set.
+colnames(data.cast) <- c(colids, gsub("(.*)", "avg-\\1", colvars))
 
