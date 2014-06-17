@@ -133,3 +133,13 @@ data.cast <- dcast(data.melt, subject + activitylabel ~ variable, mean)
 # Add 'avg' to the variable name to differentiate the data in the new data set.
 colnames(data.cast) <- c(colids, gsub("(.*)", "avg-\\1", colvars))
 
+
+# Write data sets to a file
+##################################################################
+
+if(!file.exists("./output")){ 
+  dir.create("./output") 
+}
+
+write.table(data.act, file = "output/tidy-original.txt", row.names = FALSE)
+write.table(data.cast, file = "output/tidy-avg.txt", row.names = FALSE)
