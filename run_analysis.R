@@ -13,85 +13,53 @@ if(!file.exists("./data")){
 # 1. Merges the training and the test sets to create one data set.
 ##################################################################
 
-# Get the file containing the column names for the variables
+# Get the file containing the column names for the variables and use it to create a vector of column names.
 features <- read.table("data/UCI HAR Dataset/features.txt")
-str(features) # 561 obs. of  2 variables
 cnames <- c("Subject", "Activity", as.character(features[,2]))
-str(cnames)
 
 
-# Test Data
-test.set <- read.table("data/UCI HAR Dataset/test/X_test.txt")    # 2947 obs. of 561 variables
-test.labels <- read.table("data/UCI HAR Dataset/test/y_test.txt") # 2947 obs. of 1 variable
-test.subjects <- read.table("data/UCI HAR Dataset/test/subject_test.txt") #2947 obs. of  1 variable
+# Read in the test data
+test.set <- read.table("data/UCI HAR Dataset/test/X_test.txt")
+test.labels <- read.table("data/UCI HAR Dataset/test/y_test.txt")
+test.subjects <- read.table("data/UCI HAR Dataset/test/subject_test.txt")
 
-str(test.set) # 2947 obs. of  561 variables
-head(test.set, n=5)[,1:5]
-
-str(test.labels) # 2947 obs. of  1 variable
-head(test.labels)
-table(test.labels, useNA="ifany") # 1-6 (Activity Labels)
-
-str(test.subjects) # 2947 obs. of  1 variable
-head(test.subjects)
-table(test.subjects, useNA="ifany") # 2,4,9,10,12,13,18,20,24 (of the 30 volunteers)
-
-# Add new columns to the data
+# Merge labels and subject columns into the test data set
 test.set <- cbind(test.subjects, test.labels, test.set)
 
-# Name the columns
+# Name the columns of the test data set
 colnames(test.set) <- cnames
-colnames(test.set)
-
-head(test.set, n=5)[,1:5]
 
 
-# Train Data
+# Read in the train data
 train.set <- read.table("data/UCI HAR Dataset/train/X_train.txt")
 train.labels <- read.table("data/UCI HAR Dataset/train/y_train.txt")
 train.subjects <- read.table("data/UCI HAR Dataset/train/subject_train.txt")
 
-str(train.set) # 7352 obs. of  561 variables
-head(train.set)[,1:5]
-
-str(train.labels) # 7352 obs. of  1 variable
-head(train.labels)
-table(train.labels, useNA="ifany") # 1-6 (Activity Labels)
-
-str(train.subjects) # 7352 obs. of  1 variable
-head(train.subjects)
-table(train.subjects, useNA="ifany") # 1-30 (Volunteers)
-
-# Add new columns to the data
+# Merge labels and subject columns into the train data set
 train.set <- cbind(train.subjects, train.labels, train.set)
 
-# Name the columns
+# Name the columns of the train data set
 names(train.set) <- cnames
 
-head(train.set)[,1:5]
 
-
-# Combine the datasets
+# Combine the test and train data sets into a single data frame
 data.set <- rbind(test.set, train.set)
-
-head(data.set, n=50)[,1:5]
-table(data.set$Subject, useNA="ifany")
-
 
 
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement.
-##################################################################
+############################################################################################
 
 # This extracts the mean and standard deviation for each signal listed in features_info.txt.
 # 8 variables with XYZ 3-axial signals (8 * 3 * 2 = 48) 
 # and 9 magnitudes of these variables (9 * 2 = 18)
 # for a total of 66 features extracted.
 
+# Select only the features with mean() and std() in the name
 mean.meas <- grep("(mean|std)\\(\\)", colnames(data.set), value = TRUE)
 
+# Subset the merged data set to select only these features
 data.ext <- data.set[, c("Subject", "Activity", mean.meas)]
 
-str(data.ext)
 
 # 3. Uses descriptive activity names to name the activities in the data set
 ##################################################################
@@ -110,6 +78,7 @@ data.act <- data.act[c(1,69,2:68)]
 
 # Remove the original "Activity" column
 data.act <- data.act[,!(colnames(data.act) %in% c("Activity"))]
+
 
 # 4. Appropriately labels the data set with descriptive variable names.
 ##################################################################
