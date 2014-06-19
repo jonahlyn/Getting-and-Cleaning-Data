@@ -1,4 +1,3 @@
-# How to set the working directory to the current one?
 
 # If a data directory does not exist, create the directory and download the data set into it.
 if(!file.exists("./data")){ 
@@ -6,6 +5,8 @@ if(!file.exists("./data")){
   download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", "data/dataset.zip", method = "curl") 
   data.downloaded = date()
   unzip("data/dataset.zip", exdir = "data")
+  
+  print(paste("New data set downloaded on:", data.downloaded))
 }
 
 
