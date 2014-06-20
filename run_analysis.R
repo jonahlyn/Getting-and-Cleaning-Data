@@ -1,3 +1,7 @@
+#
+# file: run_analysis.R
+# Main script to process the data set and creates two tidy data sets as output.
+#
 
 # If a data directory does not exist, create the directory and download the data set into it.
 if(!file.exists("./data")){ 
@@ -68,7 +72,7 @@ library("plyr")
 
 # Read in the activity labels
 activity.labels <- read.table("data/UCI HAR Dataset/activity_labels.txt")
-colnames(activity.labels) <- c("Activity", "ActivityLabel")
+colnames(activity.labels) <- c("Activity", "Activity.Label")
 
 # Join the activity labels into the data set
 data.act <- join(data.ext, activity.labels, by = 'Activity')
@@ -84,6 +88,7 @@ data.act <- data.act[,!(colnames(data.act) %in% c("Activity"))]
 ##################################################################
 
 colnames(data.act) <- gsub("\\(\\)", "", tolower(colnames(data.act)))
+colnames(data.act) <- gsub("-", ".", colnames(data.act))
 
 
 # 5. Creates a second, independent tidy data set with 
@@ -98,10 +103,10 @@ colvars <- colnames(data.act)[3:length(colnames(data.act))]
 
 # Reshape the data and take the mean of each variable by subject and activity
 data.melt <- melt(data.act, id=colids, measure.vars=colvars)
-data.cast <- dcast(data.melt, subject + activitylabel ~ variable, mean)
+data.cast <- dcast(data.melt, subject + activity.label ~ variable, mean)
 
 # Add 'avg' to the variable name to differentiate the data in the new data set.
-colnames(data.cast) <- c(colids, gsub("(.*)", "avg-\\1", colvars))
+colnames(data.cast) <- c(colids, gsub("(.*)", "avg.\\1", colvars))
 
 
 # Write data sets to a file
