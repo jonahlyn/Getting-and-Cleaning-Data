@@ -13,9 +13,9 @@ http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartpho
 
 How the data is processed
 -------------------------------------------
-This script creates two separate data sets as output.
+This script creates two separate data sets as output and stores the files in the output directory.
 
-### Tidy Data Set
+### tidy.txt
 
 The purpose of the first data set was to prepare (tidy) the data in the original data set for further operation and the creation of the second data set described below.
 
@@ -27,7 +27,7 @@ The original data set coded the six activities as 1-6 so it was necessary to use
 
 To avoid impossibly long feature names it was decided the original feature names were sufficiently descriptive. The original feature names were used for the tidy data set in lower case minus the special characters '(' and ')'.
 
-### Average of mean and standard deviation
+### tidy-avg.txt
 
 Finally, the script calculates the average of each mean and standard deviation feature for each activity and each subject. This was most easily accomplished using the melt and cast functions in the Hadley Wickham's reshape2 package.
 
@@ -36,7 +36,7 @@ What output can be expected
 --------------------------------------------
 Two new files will be written to the output directory.
 
-1. tidy-original.txt
+1. tidy.txt
 2. tidy-avg.txt
 
 Both files can be read into R with read.table.
