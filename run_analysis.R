@@ -116,5 +116,5 @@ if(!file.exists("./output")){
   dir.create("./output") 
 }
 
-write.table(data.act, file = "output/tidy-original.txt", row.names = FALSE)
-write.table(data.cast, file = "output/tidy-avg.txt", row.names = FALSE)
+write.table(data.act, file = "output/tidy-original.txt", row.names = FALSE, quote = FALSE)
+write.table(data.cast, file = "output/tidy-avg.txt", row.names = FALSE, quote = FALSE)
