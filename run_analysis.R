@@ -68,27 +68,22 @@ data.ext <- data.set[, c("Subject", "Activity", mean.meas)]
 # 3. Uses descriptive activity names to name the activities in the data set
 ##################################################################
 
-library("plyr")
-
 # Read in the activity labels
 activity.labels <- read.table("data/UCI HAR Dataset/activity_labels.txt")
-colnames(activity.labels) <- c("Activity", "Activity.Label")
+colnames(activity.labels) <- c("activity", "label")
 
-# Join the activity labels into the data set
-data.act <- join(data.ext, activity.labels, by = 'Activity')
+# Make the activity column a factor and recode the levels
+recode <- activity.labels$activity
+names(recode) <- activity.labels$label
 
-# Reorder the columns so that the activity label is the second column.
-data.act <- data.act[c(1,69,2:68)]
-
-# Remove the original "Activity" column
-data.act <- data.act[,!(colnames(data.act) %in% c("Activity"))]
+data.ext$Activity <- factor(data.ext$Activity, levels = recode, labels = names(recode))
 
 
 # 4. Appropriately labels the data set with descriptive variable names.
 ##################################################################
 
-colnames(data.act) <- gsub("\\(\\)", "", tolower(colnames(data.act)))
-colnames(data.act) <- gsub("-", ".", colnames(data.act))
+colnames(data.ext) <- gsub("\\(\\)", "", tolower(colnames(data.ext)))
+colnames(data.ext) <- gsub("-", ".", colnames(data.ext))
 
 
 # 5. Creates a second, independent tidy data set with 
@@ -98,12 +93,12 @@ colnames(data.act) <- gsub("-", ".", colnames(data.act))
 library(reshape2)
 
 # Collect the column names for future use
-colids <- colnames(data.act)[1:2]
-colvars <- colnames(data.act)[3:length(colnames(data.act))]
+colids <- colnames(data.ext)[1:2]
+colvars <- colnames(data.ext)[3:length(colnames(data.ext))]
 
 # Reshape the data and take the mean of each variable by subject and activity
-data.melt <- melt(data.act, id=colids, measure.vars=colvars)
-data.cast <- dcast(data.melt, subject + activity.label ~ variable, mean)
+data.melt <- melt(data.ext, id=colids, measure.vars=colvars)
+data.cast <- dcast(data.melt, subject + activity ~ variable, mean)
 
 # Add 'avg' to the variable name to differentiate the data in the new data set.
 colnames(data.cast) <- c(colids, gsub("(.*)", "avg.\\1", colvars))
@@ -116,5 +111,5 @@ if(!file.exists("./output")){
   dir.create("./output") 
 }
 
-write.table(data.act, file = "output/tidy.txt", row.names = FALSE, quote = FALSE)
+write.table(data.ext, file = "output/tidy.txt", row.names = FALSE, quote = FALSE)
 write.table(data.cast, file = "output/tidy-avg.txt", row.names = FALSE, quote = FALSE)

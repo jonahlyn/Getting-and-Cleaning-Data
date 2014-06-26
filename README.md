@@ -23,9 +23,9 @@ The experiment that produced the original data set separated participants into t
 
 Since the operations in the second data set are only concerned with the mean and standard deviation for each measurement, the mean() and std() features from the list of 17 signals in features_info.txt in the original data set were selected - 8 with XYZ 3-axial signals (8 * 3 * 2 = 48) and 9 magnitudes (9 * 2 = 18) for a total of 66 features extracted. Extracting the features with 'mean()' and 'std()' in the feature name seemed to accomplish this.
 
-The original data set coded the six activities as 1-6 so it was necessary to use activity_labels.txt from the original data set to get human-readable names of the activities. This was accomplished by using a join on the 'Activity' column.
+The original data set coded the six activities as 1-6 so it was necessary to use activity_labels.txt from the original data set to get human-readable names of the activities. This was accomplished by recoding the factors as described in *An Introduction to Data Cleaning With R* by Edwin de Jonge and Mark van der Lou.
 
-To avoid impossibly long feature names it was decided the original feature names were sufficiently descriptive. The original feature names were used for the tidy data set in lower case minus the special characters '(' and ')'.
+To avoid impossibly long feature names it was decided the original feature names were sufficiently descriptive. The original feature names were used for the tidy data set in lower case minus the special characters '(', ')' and '-'.
 
 ### tidy-avg.txt
 
@@ -39,7 +39,7 @@ Two new files will be written to the output directory.
 1. tidy.txt
 2. tidy-avg.txt
 
-Both files can be read into R with read.table.
+Both files can be read into R with read.table with a header attribute set to TRUE.
 
 
 How to run the script
@@ -50,6 +50,5 @@ The dataset as downloaded on Wed Jun 18, 2014 has been included in the repositor
 
 The script relies on the following packages which must be installed prior to running the script:
 
-* plyr
 * reshape2
 
